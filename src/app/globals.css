@@ -1,0 +1,107 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: #b48a43;
+  --color-gold-light: #f7f1e6;
+  --color-navy: #192f56;
+  --font-sans: var(--font-manrope);
+  --font-body: var(--font-source-sans);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+:root {
+  --radius: 0.65rem;
+  --background: #fff;
+  --foreground: #192f56;
+  --card: #fff;
+  --card-foreground: #192f56;
+  --popover: #fff;
+  --popover-foreground: #192f56;
+  --primary: #192f56;
+  --primary-foreground: #fff;
+  --secondary: #f2f5f9;
+  --secondary-foreground: #192f56;
+  --muted: #f3f5f8;
+  --muted-foreground: #5c687b;
+  --accent: #f7f1e6;
+  --accent-foreground: #192f56;
+  --destructive: #c43535;
+  --border: #dce2eb;
+  --input: #dce2eb;
+  --ring: #b48a43;
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  button,
+  a,
+  input {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled),
+  a {
+    touch-action: manipulation;
+  }
+  ::selection {
+    background: #e8d6b3;
+    color: #192f56;
+  }
+  :focus-visible {
+    outline: 3px solid #b48a43;
+    outline-offset: 5px;
+  }
+}
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-12;
+  }
+  .section-heading {
+    @apply text-3xl font-extrabold tracking-[-.045em] sm:text-4xl;
+  }
+  .section-rule {
+    @apply mt-4 h-[3px] w-12 rounded-full bg-gold;
+  }
+  .body-copy {
+    @apply font-body text-lg leading-relaxed text-muted-foreground;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
