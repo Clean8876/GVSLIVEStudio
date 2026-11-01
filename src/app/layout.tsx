@@ -14,8 +14,8 @@ const sourceSans = Source_Sans_3({
 });
 export const metadata: Metadata = {
   title: {
-    default: "GVS Live Stream | Every moment, shared live.",
-    template: "%s | GVS Live Stream",
+    default: "GVS Live | Every moment, shared live.",
+    template: "%s | GVS Live",
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,

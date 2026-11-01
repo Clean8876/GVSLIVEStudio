@@ -11,7 +11,7 @@ export function Brand({
   return (
     <Link
       href="/#home"
-      aria-label="GVS Live Stream home"
+      aria-label="GVS Live home"
       className={cn("inline-flex shrink-0 items-center gap-3", className)}
     >
       <span className="relative h-[62px] w-[46px] overflow-hidden rounded-sm bg-white">
@@ -30,7 +30,7 @@ export function Brand({
             light && "text-white",
           )}
         >
-          GVS Live Stream
+          GVS Live 
         </span>
         <span
           className={cn(

@@ -1,8 +1,8 @@
 export const siteConfig = {
-  name: "GVS Live Stream",
+  name: "GVS Live",
   contactName: "Girish",
   description:
-    "Watch celebrations and special events from anywhere with GVS Live Stream.",
+    "Watch celebrations and special events from anywhere with GVS Live.",
   phones: [
     { label: "+91 9663336789", href: "tel:+919663336789" },
     { label: "+91 9739336789", href: "tel:+919739336789" },

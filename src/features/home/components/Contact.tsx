@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/constants";
 
 export function Contact() {
-  const whatsapp = `https://wa.me/${siteConfig.phones[0].href.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Girish, I’d like to know more about GVS Live Stream for my event.")}`;
+  const whatsapp = `https://wa.me/${siteConfig.phones[0].href.replace(/\D/g, "")}?text=${encodeURIComponent("Hi Girish, I’d like to know more about GVS Live for my event.")}`;
 
   return (
     <section id="contact" aria-labelledby="contact-heading" className="pb-14 sm:pb-18">

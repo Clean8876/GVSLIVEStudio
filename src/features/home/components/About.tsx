@@ -45,7 +45,7 @@ export function About() {
         <div>
           <div className="mb-4 h-[3px] w-12 rounded-full bg-gold" />
           <h2 id="about-heading" className="section-heading leading-tight">
-            About GVS Live Stream
+            About GVS Live 
           </h2>
           <p className="body-copy mt-5">
             We help bring family and friends together through live event

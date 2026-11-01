@@ -55,7 +55,7 @@ export function Footer() {
         </div>
         <div className="mt-10 flex flex-col gap-2 border-t border-white/15 pt-5 font-body text-xs text-white/55 sm:flex-row sm:justify-between">
           <p>
-            © {new Date().getFullYear()} GVS Live Stream. All rights reserved.
+            © {new Date().getFullYear()} GVS Live. All rights reserved.
           </p>
           <p>Made for moments. Shared with everyone.</p>
         </div>

@@ -84,7 +84,7 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent className="w-[min(360px,90vw)]">
             <SheetHeader className="pt-12">
-              <SheetTitle>GVS Live Stream</SheetTitle>
+              <SheetTitle>GVS Live </SheetTitle>
               <SheetDescription>
                 Watch, celebrate and stay connected.
               </SheetDescription>

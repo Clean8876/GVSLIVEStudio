@@ -42,9 +42,9 @@ export function AdminLoginPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#f6f7f9] px-5 py-7 sm:px-8">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
-        <Link href="/" aria-label="GVS Live Stream home" className="flex items-center gap-3">
+        <Link href="/" aria-label="GVS Live  home" className="flex items-center gap-3">
           <span className="relative size-11 overflow-hidden rounded-lg bg-white"><Image src="/images/gvs-logo.jpg" alt="" fill sizes="44px" className="object-contain" /></span>
-          <span className="text-sm font-extrabold leading-tight text-navy">GVS Live Stream<span className="mt-0.5 block font-body text-xs font-normal text-muted-foreground">Every moment, shared.</span></span>
+          <span className="text-sm font-extrabold leading-tight text-navy">GVS Live<span className="mt-0.5 block font-body text-xs font-normal text-muted-foreground">Every moment, shared.</span></span>
         </Link>
         <Link href="/" className="inline-flex items-center gap-2 font-body text-sm font-semibold text-muted-foreground hover:text-navy"><ArrowLeft className="size-4" /> Back to website</Link>
       </div>
@@ -68,7 +68,7 @@ export function AdminLoginPage() {
           {error && <p role="alert" className="mt-4 font-body text-sm text-destructive">{error}</p>}
         </section>
       </div>
-      <p className="text-center font-body text-xs text-muted-foreground">GVS Live Stream · Every moment, shared.</p>
+      <p className="text-center font-body text-xs text-muted-foreground">GVS Live · Every moment, shared.</p>
     </main>
   );
 }
