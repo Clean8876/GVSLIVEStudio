@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import { EventList } from "@/features/events/components/EventList";
+import { VisitorMonitor } from "@/features/events/components/VisitorMonitor";
 import type { StreamEvent } from "@/features/events/types/event.types";
 export default function Page() {
   const [events, setEvents] = useState<StreamEvent[] | null>(null);
   const [error, setError] = useState("");
   useEffect(() => { apiClient.get<{ events: StreamEvent[] }>("/events").then(({ data }) => setEvents(data.events)).catch(() => setError("Sign in to see your events.")); }, []);
   if (error) return <main id="main-content"><p>{error}</p><Link className="underline" href="/admin/login">Sign in</Link></main>;
-  return events ? <EventList events={events} onDeleted={(id) => setEvents((current) => current?.filter((event) => event.id !== id) ?? [])} /> : <p>Loading events…</p>;
+  return events ? <><VisitorMonitor /><EventList events={events} onDeleted={(id) => setEvents((current) => current?.filter((event) => event.id !== id) ?? [])} /></> : <p>Loading events…</p>;
 }
