@@ -1,0 +1,27 @@
+name: Sync client fork
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: client-fork-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'Clean8876/GVSLIVEStudio'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync client fork
+        env:
+          GH_TOKEN: ${{ secrets.CLIENT_FORK_SYNC_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Add CLIENT_FORK_SYNC_TOKEN to repository secrets."
+            exit 1
+          fi
+          gh api --method POST repos/gvstours6/GVSLIVEStudio/merge-upstream -f branch=main
