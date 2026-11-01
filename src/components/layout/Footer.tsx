@@ -13,7 +13,7 @@ export function Footer() {
             </p>
           </div>
           <div>
-            <h2 className="text-base font-bold">Contact Girish</h2>
+            <h2 className="text-base font-bold">Contact</h2>
             <div className="mt-4 flex items-start gap-3">
               <Phone className="mt-1 size-5 shrink-0 text-gold" />
               <div className="space-y-2">

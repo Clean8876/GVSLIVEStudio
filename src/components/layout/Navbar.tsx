@@ -67,7 +67,7 @@ export function Navbar() {
           <Button asChild className="hidden h-11 gap-2 px-5 sm:inline-flex">
             <a href={siteConfig.phones[0].href}>
               <Phone className="size-4" />
-              Contact Girish
+              Contact
             </a>
           </Button>
         )}

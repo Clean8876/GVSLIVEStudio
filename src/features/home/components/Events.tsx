@@ -72,7 +72,7 @@ export function Events({
               upcoming broadcast or streaming your own occasion.
             </p>
             <Button asChild className="mt-6">
-              <a href={siteConfig.phones[0].href}>Contact Girish</a>
+              <a href={siteConfig.phones[0].href}>Contact</a>
             </Button>
           </div>
         ) : (

@@ -95,7 +95,7 @@ export function EventWatchPage({ event }: { event: StreamEvent }) {
           <Button asChild className="mt-5 w-full">
             <a href={siteConfig.phones[0].href}>
               <Phone className="size-4" />
-              Contact Girish
+              Contact
             </a>
           </Button>
           <p className="mt-4 font-body text-xs text-muted-foreground">
