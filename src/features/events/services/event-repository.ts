@@ -51,6 +51,16 @@ export class EventRepository {
       return { ...event, hasImage: true };
     });
   }
+  async delete(id: string): Promise<boolean> {
+    if (!this.ownerId) return false;
+    const ref = doc(this.events, id);
+    return runTransaction(this.database, async (transaction) => {
+      const item = await transaction.get(ref);
+      if (!item.exists() || item.data().ownerId !== this.ownerId) return false;
+      transaction.delete(ref);
+      return true;
+    });
+  }
   async update(id: string, patch: ValidatedEventPatch): Promise<StreamEvent | null> {
     const existing = await this.getById(id);
     if (!existing) return null;
