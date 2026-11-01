@@ -1,4 +1,5 @@
 import { ArrowRight, CalendarClock, Video } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/constants";
 import { formatEventDate } from "../data/home-content";
@@ -16,7 +17,8 @@ export function Events({
       ? []
       : events
           .filter((event) => event.isVisible && event.id !== featured.event.id)
-          .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
+          .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))
+          .slice(0, 2);
   return (
     <section
       id="events"
@@ -31,9 +33,11 @@ export function Events({
             </h2>
             <div className="section-rule" />
           </div>
-          <p className="font-body text-sm text-muted-foreground">
-            A front-row seat, wherever you are.
-          </p>
+          {featured.kind !== "empty" && (
+            <Button asChild variant="outline">
+              <Link href="/events">View all events <ArrowRight className="size-4" /></Link>
+            </Button>
+          )}
         </div>
         {featured.kind === "upcoming" && (
           <div
