@@ -87,3 +87,20 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     return event ? reply({ event }, 200) : reply({ message: "This event was not found." }, 404);
   } catch { return reply({ message: "Unable to load the event." }, 500); }
 }
+
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("host") ?? new URL(request.url).host;
+  const protocol = request.headers.get("x-forwarded-proto") ?? new URL(request.url).protocol.replace(":", "");
+  if (origin && origin !== `${protocol}://${host}`) return reply({ message: "This request must come from this website." }, 403);
+  try {
+    const repository = await authenticatedRepository(request);
+    if (!repository) return reply({ message: "Please sign in first." }, 401);
+    const { id } = await context.params;
+    if (!id || id.includes("/") || id.length > 1500) return reply({ message: "Invalid event." }, 400);
+    if (!(await repository.delete(id))) return reply({ message: "This event was not found." }, 404);
+    return reply({ deleted: true }, 200);
+  } catch {
+    return reply({ message: "Could not delete the event. Please try again." }, 500);
+  }
+}

@@ -112,7 +112,7 @@ export function Navbar() {
                 <Button asChild className="mt-5">
                   <a href={siteConfig.phones[0].href}>
                     <Phone />
-                    Contact Girish
+                    Contact
                   </a>
                 </Button>
               )}

@@ -22,13 +22,15 @@ import type { StreamEvent } from "../types/event.types";
 import { formatEventDate, formatEventTime } from "../lib/dates";
 import { CopyEventLink } from "./CopyEventLink";
 import { VisibilitySwitch } from "./VisibilitySwitch";
-function Actions({ event }: { event: StreamEvent }) {
+import { DeleteEvent } from "./DeleteEvent";
+function Actions({ event, onDeleted }: { event: StreamEvent; onDeleted: (id: string) => void }) {
   return (
     <div className="flex flex-wrap items-start gap-2">
       <Button asChild size="sm" variant="outline">
         <Link href={`/studio/events/${event.id}/edit`}>Edit</Link>
       </Button>
       <CopyEventLink slug={event.slug} compact />
+      <DeleteEvent event={event} onDeleted={onDeleted} />
       {event.isVisible && (
         <Button asChild size="icon" variant="ghost" className="size-8">
           <Link
@@ -42,7 +44,7 @@ function Actions({ event }: { event: StreamEvent }) {
     </div>
   );
 }
-export function EventList({ events }: { events: StreamEvent[] }) {
+export function EventList({ events, onDeleted }: { events: StreamEvent[]; onDeleted: (id: string) => void }) {
   const visible = events.filter((event) => event.isVisible).length;
   return (
     <main id="main-content">
@@ -149,7 +151,7 @@ export function EventList({ events }: { events: StreamEvent[] }) {
                       />
                     </TableCell>
                     <TableCell>
-                      <Actions event={event} />
+                      <Actions event={event} onDeleted={onDeleted} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -182,7 +184,7 @@ export function EventList({ events }: { events: StreamEvent[] }) {
                     title={event.title}
                   />
                 </div>
-                <Actions event={event} />
+                <Actions event={event} onDeleted={onDeleted} />
               </article>
             ))}
           </div>
