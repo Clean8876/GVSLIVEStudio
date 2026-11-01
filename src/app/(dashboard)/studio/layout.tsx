@@ -1,11 +1,14 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/lib/firebase/session-server";
 import { StudioAuthGate } from "@/components/layout/StudioAuthGate";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-export default function StudioLayout({
+export default async function StudioLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  if (!(await getServerSession())) redirect("/admin/login");
   return (
     <>
       <a

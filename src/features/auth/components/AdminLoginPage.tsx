@@ -3,12 +3,14 @@ import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
-import { authError, signIn, signOutUser } from "../services/auth";
+import { authError, signIn, signOutUser, syncSession } from "../services/auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowLeft, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 
 export function AdminLoginPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -17,7 +19,13 @@ export function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  useEffect(() => onAuthStateChanged(auth, (current) => { setUser(current); setLoading(false); }), []);
+  useEffect(() => onAuthStateChanged(auth, (current) => {
+    setLoading(true);
+    syncSession(current)
+      .then(() => setUser(current))
+      .catch((error) => { setUser(null); setError(authError(error)); })
+      .finally(() => setLoading(false));
+  }), []);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError("");
     try { await signIn(email.trim(), password); }
@@ -30,6 +38,7 @@ export function AdminLoginPage() {
     catch (error) { setError(authError(error)); }
     finally { setBusy(false); }
   }
+  if (!loading && user) redirect("/");
   return (
     <main className="flex min-h-screen flex-col bg-[#f6f7f9] px-5 py-7 sm:px-8">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between">

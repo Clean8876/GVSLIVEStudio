@@ -1,8 +1,9 @@
 "use client";
-import { Menu, Phone } from "lucide-react";
+import { LogOut, Menu, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onIdTokenChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
+import { authError, signOutUser, syncSession } from "@/features/auth/services/auth";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -18,7 +19,26 @@ import { Brand } from "./Brand";
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
-  useEffect(() => onAuthStateChanged(auth, (user) => setSignedIn(Boolean(user))), []);
+  const [signingOut, setSigningOut] = useState(false);
+  const [error, setError] = useState("");
+  async function logout() {
+    if (signingOut) return;
+    setSigningOut(true);
+    setError("");
+    try {
+      await signOutUser();
+      setOpen(false);
+    } catch (error) {
+      setError(authError(error));
+    } finally {
+      setSigningOut(false);
+    }
+  }
+  useEffect(() => onIdTokenChanged(auth, (user) => {
+    syncSession(user)
+      .then(() => setSignedIn(Boolean(user)))
+      .catch((error) => { setSignedIn(false); setError(authError(error)); });
+  }), []);
   const navigation = siteConfig.navigation.filter((item) => item.href !== "/studio/events" || signedIn);
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-white/95 backdrop-blur-md">
@@ -38,12 +58,19 @@ export function Navbar() {
             </a>
           ))}
         </nav>
-        <Button asChild className="hidden h-11 gap-2 px-5 sm:inline-flex">
-          <a href={siteConfig.phones[0].href}>
-            <Phone className="size-4" />
-            Contact Girish
-          </a>
-        </Button>
+        {signedIn ? (
+          <Button type="button" onClick={logout} disabled={signingOut} className="hidden h-11 gap-2 px-5 sm:inline-flex">
+            <LogOut className="size-4" />
+            {signingOut ? "Signing out…" : "Sign out"}
+          </Button>
+        ) : (
+          <Button asChild className="hidden h-11 gap-2 px-5 sm:inline-flex">
+            <a href={siteConfig.phones[0].href}>
+              <Phone className="size-4" />
+              Contact Girish
+            </a>
+          </Button>
+        )}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button
@@ -76,16 +103,25 @@ export function Navbar() {
                   </a>
                 </SheetClose>
               ))}
-              <Button asChild className="mt-5">
-                <a href={siteConfig.phones[0].href}>
-                  <Phone />
-                  Contact Girish
-                </a>
-              </Button>
+              {signedIn ? (
+                <Button type="button" onClick={logout} disabled={signingOut} className="mt-5">
+                  <LogOut className="size-4" />
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </Button>
+              ) : (
+                <Button asChild className="mt-5">
+                  <a href={siteConfig.phones[0].href}>
+                    <Phone />
+                    Contact Girish
+                  </a>
+                </Button>
+              )}
+              {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
             </nav>
           </SheetContent>
         </Sheet>
       </div>
+      {error && <p role="alert" className="page-container pb-3 text-sm text-destructive">{error}</p>}
     </header>
   );
 }
