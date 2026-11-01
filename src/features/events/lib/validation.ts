@@ -6,7 +6,7 @@ import type {
 import { parseYouTubeId } from "./youtube";
 type Result<T> =
   { success: true; data: T } | { success: false; errors: EventFieldErrors };
-const allowed = ["title", "description", "youtubeUrl", "startsAt", "isVisible"];
+const allowed = ["title", "description", "youtubeUrl", "streams", "startsAt", "isVisible"];
 function isObject(input: unknown): input is Record<string, unknown> {
   return typeof input === "object" && input !== null && !Array.isArray(input);
 }
@@ -57,6 +57,29 @@ function validate(
       : null;
   if (!youtubeId)
     errors.youtubeUrl = "Paste the video's HTTPS YouTube Share link.";
+  let streams: { name: string; youtubeId: string }[] | undefined;
+  if (input.streams !== undefined) {
+    if (!Array.isArray(input.streams) || input.streams.length < 1 || input.streams.length > 10) {
+      errors.streams = "Add between 1 and 10 streams.";
+    } else {
+      streams = [];
+      for (const stream of input.streams) {
+        if (!isObject(stream) || Object.keys(stream).some((key) => !["name", "youtubeUrl"].includes(key))) {
+          errors.streams = "Check each stream name and YouTube link.";
+          break;
+        }
+        const name = typeof stream.name === "string" ? stream.name.trim() : "";
+        const id = typeof stream.youtubeUrl === "string" && stream.youtubeUrl.length <= 2048 ? parseYouTubeId(stream.youtubeUrl) : null;
+        if (!name || name.length > 80 || !id) {
+          errors.streams = "Enter a name and valid YouTube link for each stream.";
+          break;
+        }
+        streams.push({ name, youtubeId: id });
+      }
+      if (streams[0]?.youtubeId !== youtubeId) errors.streams = "The first stream must match the main YouTube link.";
+      if (new Set(streams.map((stream) => stream.youtubeId)).size !== streams.length) errors.streams = "Each stream must have a different YouTube link.";
+    }
+  }
   const startsAt = normalizeDate(input.startsAt);
   if (!startsAt)
     errors.startsAt = "Enter a valid date and time with a timezone.";
@@ -71,6 +94,7 @@ function validate(
       title,
       description: description as string,
       youtubeId: youtubeId!,
+      ...(streams ? { streams } : {}),
       startsAt: startsAt!,
       isVisible: isVisible as boolean,
     },

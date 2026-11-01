@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, CalendarDays, ExternalLink, Phone } from "lucide-react";
+import { ArrowLeft, CalendarDays, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/constants";
@@ -9,7 +9,7 @@ import {
   isUpcomingEvent,
 } from "../lib/dates";
 import type { StreamEvent } from "../types/event.types";
-import { YouTubePlayer } from "./YouTubePlayer";
+import { StreamViewer } from "./StreamViewer";
 import { CopyEventLink } from "./CopyEventLink";
 export function EventWatchPage({ event }: { event: StreamEvent }) {
   const upcoming = isUpcomingEvent(event.startsAt);
@@ -39,24 +39,8 @@ export function EventWatchPage({ event }: { event: StreamEvent }) {
       </div>
       <div className="grid items-start gap-7 lg:grid-cols-[1fr_300px]">
         <div>
-          <YouTubePlayer
-            key={event.youtubeId}
-            videoId={event.youtubeId}
-            title={event.title}
-          />
-          <div className="my-6 flex flex-wrap gap-3">
-            <CopyEventLink slug={event.slug} />
-            <Button asChild variant="outline">
-              <a
-                href={`https://www.youtube.com/watch?v=${event.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Watch on YouTube
-                <ExternalLink className="size-4" />
-              </a>
-            </Button>
-          </div>
+          <StreamViewer streams={event.streams?.length ? event.streams : [{ name: "Main stream", youtubeId: event.youtubeId }]} title={event.title} />
+          <div className="my-6 flex flex-wrap gap-3"><CopyEventLink slug={event.slug} /></div>
           {event.description && (
             <section className="border-t pt-6">
               <h2 className="text-xl font-bold">About this event</h2>

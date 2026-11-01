@@ -14,6 +14,8 @@ import {
   ImageIcon,
   LoaderCircle,
   Play,
+  Plus,
+  Trash2,
   Save,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -52,6 +54,10 @@ export function EventForm({ event }: { event?: StreamEvent }) {
   const [youtubeUrl, setYoutubeUrl] = useState(
     event ? `https://youtu.be/${event.youtubeId}` : "",
   );
+  const [streamName, setStreamName] = useState(event?.streams?.[0]?.name ?? "Main stream");
+  const [additionalStreams, setAdditionalStreams] = useState(
+    event?.streams?.slice(1).map((stream) => ({ name: stream.name, youtubeUrl: `https://youtu.be/${stream.youtubeId}` })) ?? [],
+  );
   const [date, setDate] = useState(initial.date);
   const [time, setTime] = useState(initial.time);
   const [description, setDescription] = useState(event?.description ?? "");
@@ -83,7 +89,7 @@ export function EventForm({ event }: { event?: StreamEvent }) {
     e.preventDefault();
     if (saving || visibilitySaving) return;
     const startsAt = date && time ? `${date}T${time}:00+05:30` : "";
-    const input = { title, youtubeUrl, description, startsAt, isVisible };
+    const input = { title, youtubeUrl, streams: [{ name: streamName, youtubeUrl }, ...additionalStreams], description, startsAt, isVisible };
     const checked = validateEventInput(input);
     if (!checked.success) {
       setErrors(checked.errors);
@@ -109,7 +115,7 @@ export function EventForm({ event }: { event?: StreamEvent }) {
       if (
         !event &&
         Object.entries(checked.data).some(
-          ([field, value]) => result.event[field as keyof StreamEvent] !== value,
+          ([field, value]) => JSON.stringify(result.event[field as keyof StreamEvent]) !== JSON.stringify(value),
         )
       ) {
         const correction = await apiClient.patch<{ event: StreamEvent }>(
@@ -217,6 +223,25 @@ export function EventForm({ event }: { event?: StreamEvent }) {
                 On YouTube, choose Share and copy the video link. Paste it here.
               </p>
               <FieldError id="youtube-error" message={errors.youtubeUrl} />
+            </div>
+            <div className="space-y-4 rounded-lg border bg-secondary/30 p-4">
+              <div>
+                <Label htmlFor="main-stream-name">Main stream name</Label>
+                <Input id="main-stream-name" value={streamName} onChange={(e) => setStreamName(e.target.value)} maxLength={80} className="mt-2 h-12" placeholder="For example, Main camera" />
+              </div>
+              {additionalStreams.map((stream, index) => (
+                <div key={index} className="space-y-3 rounded-lg border bg-white p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold">Stream {index + 2}</p>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setAdditionalStreams((items) => items.filter((_, i) => i !== index))} aria-label={`Remove stream ${index + 2}`}><Trash2 className="size-4" /> Remove</Button>
+                  </div>
+                  <div><Label htmlFor={`stream-name-${index}`}>Stream name</Label><Input id={`stream-name-${index}`} value={stream.name} maxLength={80} onChange={(e) => setAdditionalStreams((items) => items.map((item, i) => i === index ? { ...item, name: e.target.value } : item))} className="mt-2 h-12" placeholder="For example, Stage view" /></div>
+                  <div><Label htmlFor={`stream-url-${index}`}>YouTube Share link</Label><Input id={`stream-url-${index}`} type="url" maxLength={2048} value={stream.youtubeUrl} onChange={(e) => setAdditionalStreams((items) => items.map((item, i) => i === index ? { ...item, youtubeUrl: e.target.value } : item))} className="mt-2 h-12" placeholder="https://youtu.be/..." /></div>
+                </div>
+              ))}
+              <FieldError id="streams-error" message={errors.streams} />
+              <Button type="button" variant="outline" onClick={() => setAdditionalStreams((items) => [...items, { name: "", youtubeUrl: "" }])} disabled={additionalStreams.length >= 9}><Plus className="size-4" /> Add another stream</Button>
+              <p className="font-body text-sm text-muted-foreground">All streams share this event’s date and time. Add up to 10 streams.</p>
             </div>
             <div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">

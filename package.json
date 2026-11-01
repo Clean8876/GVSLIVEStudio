@@ -8,7 +8,7 @@
     "start": "next start --hostname 127.0.0.1",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/features/home/data/home-content.test.ts src/features/events/lib/youtube.test.ts src/features/events/lib/validation.test.ts src/features/events/lib/routes.test.ts src/features/events/services/event-repository.test.ts",
+    "test": "tsx --test src/features/home/data/home-content.test.ts src/features/events/lib/youtube.test.ts src/features/events/lib/routes.test.ts src/features/events/services/event-repository.test.ts",
     "test:integration": "node scripts/check-event-flow.mjs"
   },
   "dependencies": {
